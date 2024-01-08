@@ -1,4 +1,4 @@
-﻿namespace RdJNL.TextTemplatingCore.TestProject
+﻿namespace CloudIDEaaS.TextTemplatingCore.TestProject
 {
     public interface IHello : IBase
     {

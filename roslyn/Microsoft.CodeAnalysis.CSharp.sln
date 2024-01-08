@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.CSharp", "src\Compilers\CSharp\Portable\Microsoft.CodeAnalysis.CSharp.csproj", "{ADFBAA44-4E9D-464C-AF56-0DB9B6F3DFF6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Compilers", "Compilers", "{60F96F24-25B1-474E-B177-8F7D2FD8F987}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSharp", "CSharp", "{16809CC7-CF95-49ED-9113-9AB451CC51DC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{33D38A72-5126-4B71-A82A-080450503752}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis", "src\Compilers\Core\Portable\Microsoft.CodeAnalysis.csproj", "{66A58730-4666-4F82-A507-AE94166902D0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ADFBAA44-4E9D-464C-AF56-0DB9B6F3DFF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADFBAA44-4E9D-464C-AF56-0DB9B6F3DFF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADFBAA44-4E9D-464C-AF56-0DB9B6F3DFF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADFBAA44-4E9D-464C-AF56-0DB9B6F3DFF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66A58730-4666-4F82-A507-AE94166902D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66A58730-4666-4F82-A507-AE94166902D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66A58730-4666-4F82-A507-AE94166902D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66A58730-4666-4F82-A507-AE94166902D0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{ADFBAA44-4E9D-464C-AF56-0DB9B6F3DFF6} = {16809CC7-CF95-49ED-9113-9AB451CC51DC}
+		{16809CC7-CF95-49ED-9113-9AB451CC51DC} = {60F96F24-25B1-474E-B177-8F7D2FD8F987}
+		{33D38A72-5126-4B71-A82A-080450503752} = {60F96F24-25B1-474E-B177-8F7D2FD8F987}
+		{66A58730-4666-4F82-A507-AE94166902D0} = {33D38A72-5126-4B71-A82A-080450503752}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {99B684B6-D519-477E-99B8-FEDFC61703F4}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\Compilers\Core\AnalyzerDriver\AnalyzerDriver.projitems*{66a58730-4666-4f82-a507-ae94166902d0}*SharedItemsImports = 5
+		src\Dependencies\CodeAnalysis.Debugging\Microsoft.CodeAnalysis.Debugging.projitems*{66a58730-4666-4f82-a507-ae94166902d0}*SharedItemsImports = 5
+		src\Dependencies\Collections\Microsoft.CodeAnalysis.Collections.projitems*{66a58730-4666-4f82-a507-ae94166902d0}*SharedItemsImports = 5
+		src\Dependencies\PooledObjects\Microsoft.CodeAnalysis.PooledObjects.projitems*{66a58730-4666-4f82-a507-ae94166902d0}*SharedItemsImports = 5
+		src\Compilers\CSharp\CSharpAnalyzerDriver\CSharpAnalyzerDriver.projitems*{adfbaa44-4e9d-464c-af56-0db9b6f3dff6}*SharedItemsImports = 5
+	EndGlobalSection
+EndGlobal

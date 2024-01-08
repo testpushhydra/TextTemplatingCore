@@ -9,9 +9,9 @@
 <#@ import namespace="System.Text.Json" #>
 <#@ import namespace="System.Text.Json.Serialization" #>
 <#
-    var baseType = typeof(RdJNL.TextTemplatingCore.TestProject.IBase);
+    var baseType = typeof(CloudIDEaaS.TextTemplatingCore.TestProject.IBase);
     var types = baseType.Assembly.GetTypes().Where(t => t != baseType && baseType.IsAssignableFrom(t) && t.IsPublic && t.IsInterface);
-    var test = typeof(RdJNL.TextTemplatingCore.TestProject.Test);
+    var test = typeof(CloudIDEaaS.TextTemplatingCore.TestProject.Test);
 #>
 Test
 <# for( int i = 0; i < 12; ++i ) { #>

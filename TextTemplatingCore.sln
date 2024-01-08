@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.1.32407.343
+VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextTemplatingFileGeneratorCore", "TextTemplatingFileGeneratorCore\TextTemplatingFileGeneratorCore.csproj", "{DF8E9B6C-BA5C-41C7-80E7-0C9065528049}"
 EndProject
@@ -9,15 +9,28 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		global.json = global.json
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TemplateExecute", "TemplateExecute\TemplateExecute.csproj", "{31A56EF0-7739-46B0-A6A9-CDA93886D3F9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextTransformCore", "TextTransformCore\TextTransformCore.csproj", "{FD50106B-40A1-4270-AD4A-591EB9F5A933}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextTemplatingCoreLib", "TextTemplatingCoreLib\TextTemplatingCoreLib.csproj", "{ADB1EE01-F30D-4922-85E4-25A4F55BAC76}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rosyln", "rosyln", "{6BBF4348-9084-49A0-80DD-4DBDDE5922ED}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Compilers", "Compilers", "{71E0D9C2-0014-4A68-8AB9-8E002A35472C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{DB4FF202-FC17-49F0-9413-AF972C402F3C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSharp", "CSharp", "{9A82E3CB-C0DE-4F36-ADA0-819E85B70CCF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TemplateExecute", "TemplateExecute\TemplateExecute.csproj", "{5EE19466-0586-4CB1-94F6-EAEAD3F39B93}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis", "roslyn\src\Compilers\Core\Portable\Microsoft.CodeAnalysis.csproj", "{B59B56D6-C08B-4553-9891-14005761BE5E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.CSharp", "roslyn\src\Compilers\CSharp\Portable\Microsoft.CodeAnalysis.CSharp.csproj", "{97BF0F38-93F5-4154-B6B9-96389C7A3332}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextTemplatingCoreLib", "TextTemplatingCoreLib\TextTemplatingCoreLib.csproj", "{373DBEF1-A159-4673-803C-4B7B3A9A9A3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,23 +42,45 @@ Global
 		{DF8E9B6C-BA5C-41C7-80E7-0C9065528049}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF8E9B6C-BA5C-41C7-80E7-0C9065528049}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF8E9B6C-BA5C-41C7-80E7-0C9065528049}.Release|Any CPU.Build.0 = Release|Any CPU
-		{31A56EF0-7739-46B0-A6A9-CDA93886D3F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{31A56EF0-7739-46B0-A6A9-CDA93886D3F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{31A56EF0-7739-46B0-A6A9-CDA93886D3F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{31A56EF0-7739-46B0-A6A9-CDA93886D3F9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FD50106B-40A1-4270-AD4A-591EB9F5A933}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FD50106B-40A1-4270-AD4A-591EB9F5A933}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD50106B-40A1-4270-AD4A-591EB9F5A933}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD50106B-40A1-4270-AD4A-591EB9F5A933}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ADB1EE01-F30D-4922-85E4-25A4F55BAC76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ADB1EE01-F30D-4922-85E4-25A4F55BAC76}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ADB1EE01-F30D-4922-85E4-25A4F55BAC76}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ADB1EE01-F30D-4922-85E4-25A4F55BAC76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EE19466-0586-4CB1-94F6-EAEAD3F39B93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EE19466-0586-4CB1-94F6-EAEAD3F39B93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EE19466-0586-4CB1-94F6-EAEAD3F39B93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EE19466-0586-4CB1-94F6-EAEAD3F39B93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B59B56D6-C08B-4553-9891-14005761BE5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B59B56D6-C08B-4553-9891-14005761BE5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B59B56D6-C08B-4553-9891-14005761BE5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B59B56D6-C08B-4553-9891-14005761BE5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97BF0F38-93F5-4154-B6B9-96389C7A3332}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97BF0F38-93F5-4154-B6B9-96389C7A3332}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97BF0F38-93F5-4154-B6B9-96389C7A3332}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97BF0F38-93F5-4154-B6B9-96389C7A3332}.Release|Any CPU.Build.0 = Release|Any CPU
+		{373DBEF1-A159-4673-803C-4B7B3A9A9A3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{373DBEF1-A159-4673-803C-4B7B3A9A9A3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{373DBEF1-A159-4673-803C-4B7B3A9A9A3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{373DBEF1-A159-4673-803C-4B7B3A9A9A3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{71E0D9C2-0014-4A68-8AB9-8E002A35472C} = {6BBF4348-9084-49A0-80DD-4DBDDE5922ED}
+		{DB4FF202-FC17-49F0-9413-AF972C402F3C} = {71E0D9C2-0014-4A68-8AB9-8E002A35472C}
+		{9A82E3CB-C0DE-4F36-ADA0-819E85B70CCF} = {71E0D9C2-0014-4A68-8AB9-8E002A35472C}
+		{B59B56D6-C08B-4553-9891-14005761BE5E} = {DB4FF202-FC17-49F0-9413-AF972C402F3C}
+		{97BF0F38-93F5-4154-B6B9-96389C7A3332} = {9A82E3CB-C0DE-4F36-ADA0-819E85B70CCF}
+	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {38DB66CE-B435-4F5E-85F6-457465E1D4FC}
+		SolutionGuid = {99B684B6-D519-477E-99B8-FEDFC61703F4}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		roslyn\src\Compilers\CSharp\CSharpAnalyzerDriver\CSharpAnalyzerDriver.projitems*{97bf0f38-93f5-4154-b6b9-96389c7a3332}*SharedItemsImports = 5
+		roslyn\src\Compilers\Core\AnalyzerDriver\AnalyzerDriver.projitems*{b59b56d6-c08b-4553-9891-14005761be5e}*SharedItemsImports = 5
+		roslyn\src\Dependencies\CodeAnalysis.Debugging\Microsoft.CodeAnalysis.Debugging.projitems*{b59b56d6-c08b-4553-9891-14005761be5e}*SharedItemsImports = 5
+		roslyn\src\Dependencies\Collections\Microsoft.CodeAnalysis.Collections.projitems*{b59b56d6-c08b-4553-9891-14005761be5e}*SharedItemsImports = 5
+		roslyn\src\Dependencies\PooledObjects\Microsoft.CodeAnalysis.PooledObjects.projitems*{b59b56d6-c08b-4553-9891-14005761be5e}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

@@ -1,6 +1,6 @@
 ﻿//---------------------------------------------//
-// Copyright 2022 RdJNL                        //
-// https://github.com/RdJNL/TextTemplatingCore //
+// Copyright 2022 CloudIDEaaS                        //
+// https://github.com/CloudIDEaaS/TextTemplatingCore //
 //---------------------------------------------//
 using System;
 using System.Collections;
@@ -14,19 +14,20 @@ using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TextTemplating.VSHost;
-using RdJNL.TextTemplatingCore.TextTemplatingCoreLib;
+using CloudIDEaaS.TextTemplatingCore.TextTemplatingCoreLib;
+using System.Windows.Forms;
 
-namespace RdJNL.TextTemplatingCore.TextTemplatingFileGeneratorCore
+namespace CloudIDEaaS.TextTemplatingCore.TextTemplatingFileGeneratorCore
 {
     [Guid(GENERATOR_GUID)]
     public sealed class TextTemplatingFileGeneratorCore : BaseTemplatedCodeGenerator
     {
         public const string GENERATOR_GUID = "85B769DE-38F5-4CBE-91AE-D0DFA431FE30";
         public const string GENERATOR_NAME = nameof(TextTemplatingFileGeneratorCore);
-        public const string GENERATOR_DESCRIPTION = "Generate files from T4 templates using the .NET 7 runtime.";
+        public const string GENERATOR_DESCRIPTION = "Generate files from T4 templates using the .NET 8 runtime.";
 
         private const string ERROR_OUTPUT = "ErrorGeneratingOutput";
-        private const string TEMPLATE_NAMESPACE = "RdJNL.TextTemplatingCore.GeneratedTemplate";
+        private const string TEMPLATE_NAMESPACE = "CloudIDEaaS.TextTemplatingCore.GeneratedTemplate";
         private const string TEMPLATE_CLASS = "Template";
 
         private string _extension;
@@ -40,16 +41,27 @@ namespace RdJNL.TextTemplatingCore.TextTemplatingFileGeneratorCore
         protected override string ProcessTemplate(string inputFileName, string inputFileContent, ITextTemplating processor, IVsHierarchy hierarchy)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
+            var statusbar = (IVsStatusbar) GetService(typeof(SVsStatusbar));
 
             try
             {
+                DTE dte = (DTE)GetService(typeof(DTE));
+                string soluionFile = dte.Solution.FullName;
+                string solutionDir = System.IO.Path.GetDirectoryName(soluionFile);
+
+                Environment.SetEnvironmentVariable("SolutionDir", solutionDir);
+                Environment.SetEnvironmentVariable("SolutionFileName", soluionFile);
+
                 TextTemplatingCallback callback = new TextTemplatingCallback(this);
 
-                processor.BeginErrorSession();
-                string templateCode = processor.PreprocessTemplate(inputFileName, inputFileContent, callback, TEMPLATE_CLASS, TEMPLATE_NAMESPACE,
-                    out string[] references);
+                statusbar.SetText($"Pre-processing template: '{ inputFileName }'");
 
-                if( processor.EndErrorSession() || callback.ErrorLogged )
+                processor.BeginErrorSession();
+                string templateCode = processor.PreprocessTemplate(inputFileName, inputFileContent, callback, TEMPLATE_CLASS, TEMPLATE_NAMESPACE, out string[] references);
+
+                references = references.Select(r => r.Replace("$(SolutionDir)", solutionDir + @"\")).ToArray();
+
+                if (processor.EndErrorSession() || callback.ErrorLogged)
                 {
                     return ERROR_OUTPUT;
                 }
@@ -57,9 +69,18 @@ namespace RdJNL.TextTemplatingCore.TextTemplatingFileGeneratorCore
                 DetectExtensionDirective(inputFileContent);
                 _encoding = callback.OutputEncoding;
 
-                references = ProcessReferences(references, inputFileName).ToArray();
+                references = ProcessReferences(references, inputFileName, solutionDir).ToArray();
 
-                string output = TextTemplatingHelper.ExecuteTemplate(inputFileName, templateCode, references, out TemplateError[] errors);
+                var processEndCallback = new Action(() =>
+                {
+                    ThreadHelper.ThrowIfNotOnUIThread();
+
+                    statusbar.SetText($"Processing complete for: '{ inputFileName }'");
+                });
+
+                statusbar.SetText($"Processing template: '{inputFileName }'");
+
+                string output = TextTemplatingHelper.TemplateExecute(inputFileName, templateCode, references, processEndCallback, out TemplateError[] errors);
                 GenerateErrors(errors);
 
                 if( output == null )
@@ -73,7 +94,10 @@ namespace RdJNL.TextTemplatingCore.TextTemplatingFileGeneratorCore
             }
             catch( Exception e )
             {
-                GenerateError(false, $"Something went wrong processing the template '{inputFileName}': {e}");
+                statusbar.SetText($"Something went wrong processing the template '{ inputFileName }': { e }");
+
+                GenerateError(false, $"Something went wrong processing the template '{ inputFileName }': { e }");
+
                 return ERROR_OUTPUT;
             }
         }
@@ -95,7 +119,7 @@ namespace RdJNL.TextTemplatingCore.TextTemplatingFileGeneratorCore
             }
         }
 
-        private IEnumerable<string> ProcessReferences(string[] references, string inputFileName)
+        private IEnumerable<string> ProcessReferences(string[] references, string inputFileName, string solutionDir)
         {
             IDictionary<string, string> variables = GetReferenceVariables(inputFileName);
 

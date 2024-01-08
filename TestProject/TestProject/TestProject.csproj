@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>RdJNL.TextTemplatingCore.TestProject</RootNamespace>
+    <RootNamespace>CloudIDEaaS.TextTemplatingCore.TestProject</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

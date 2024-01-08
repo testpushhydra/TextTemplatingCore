@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace RdJNL.TextTemplatingCore.TestProject
+namespace CloudIDEaaS.TextTemplatingCore.TestProject
 {
     public sealed class Test
     {

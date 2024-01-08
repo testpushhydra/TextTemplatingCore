@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>RdJNL.TextTemplatingCore.TestProject5</RootNamespace>
+    <RootNamespace>CloudIDEaaS.TextTemplatingCore.TestProject5</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

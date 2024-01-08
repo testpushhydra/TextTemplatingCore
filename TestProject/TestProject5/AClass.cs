@@ -1,4 +1,4 @@
-﻿namespace RdJNL.TextTemplatingCore.TestProject5
+﻿namespace CloudIDEaaS.TextTemplatingCore.TestProject5
 {
     public static class AClass
     {

@@ -13,7 +13,7 @@
 #12
 6.0.4
 "2019-10-02T00:00:00"
-RdJNL.TextTemplatingCore.TestProject.IHello
-RdJNL.TextTemplatingCore.TestProject.IWorld
+CloudIDEaaS.TextTemplatingCore.TestProject.IHello
+CloudIDEaaS.TextTemplatingCore.TestProject.IWorld
 Microsoft.Extensions.DependencyInjection.IServiceCollection
 D:\Dev\Projects\TextTemplatingCore\TestProject\TestProject\TextTemplate.tt

@@ -1,15 +1,15 @@
-﻿Copyright 2022 RdJNL
+﻿Copyright 2022 CloudIDEaaS
 All rights reserved
 
 Latest revision: 19 March 2020
 
 The law of the Netherlands applies to this license. Any disputes arising from this license shall be settled in a Dutch court of law.
 
-This license applies to all contents of the TextTemplatingCore repository (https://github.com/RdJNL/TextTemplatingCore) and to all contents
+This license applies to all contents of the TextTemplatingCore repository (https://github.com/CloudIDEaaS/TextTemplatingCore) and to all contents
 of all forks of the TextTemplatingCore repository. This includes, but is not limited to, any archives of (part of) the contents provided on
 the Releases and/or Tags pages of the repository and/or the Releases and/or Tags pages of forks of the repository.
 
-1) The ownership and copyright of all contents of the repository belong to RdJNL (https://github.com/RdJNL).
+1) The ownership and copyright of all contents of the repository belong to CloudIDEaaS (https://github.com/CloudIDEaaS).
 
 2) The contents of the repository, or parts of the contents of the repository, or any derivatives of (parts of) the contents of the
    repository, may not be distributed in any way, form or shape. This includes, but is not limited to, assemblies compiled from the code in
@@ -22,7 +22,7 @@ the Releases and/or Tags pages of the repository and/or the Releases and/or Tags
 
 4) Contributions to the repository will be made subject to the following conditions:
 4.1) The contributor (the person/entity that submits the contribution to the repository) transfers all ownership and copyright of the
-     contributed contents to the copyright holder of the repository (RdJNL).
+     contributed contents to the copyright holder of the repository (CloudIDEaaS).
 4.2) The copyright holder of the repository grants the contributor a world-wide, non-exclusive, royalty-free and perpetual right to use,
      copy, modify, communicate and make available to the public (including without limitation via the internet) and distribute, in each
 	 case in an original or modified form, the contributed contents as they wish.

@@ -58,9 +58,89 @@
     <Compile Include="VSPackage.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\Debug\TemplateExecute\Microsoft.VisualStudio.RemoteControl.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>bin\Debug\TemplateExecute</VSIXSubPath>
+      <TargetPath>TemplateExecute</TargetPath>
+    </Content>
+    <Content Include="bin\Debug\TemplateExecute\Microsoft.VisualStudio.Telemetry.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>bin\Debug\TemplateExecute</VSIXSubPath>
+      <TargetPath>TemplateExecute</TargetPath>
+    </Content>
+    <Content Include="bin\Debug\TemplateExecute\Microsoft.VisualStudio.TextTemplating.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>bin\Debug\TemplateExecute</VSIXSubPath>
+      <TargetPath>TemplateExecute</TargetPath>
+    </Content>
+    <Content Include="bin\Debug\TemplateExecute\Microsoft.VisualStudio.TextTemplating.Interfaces.10.0.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>bin\Debug\TemplateExecute</VSIXSubPath>
+      <TargetPath>TemplateExecute</TargetPath>
+    </Content>
+    <Content Include="bin\Debug\TemplateExecute\Microsoft.VisualStudio.TextTemplating.Interfaces.11.0.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>bin\Debug\TemplateExecute</VSIXSubPath>
+      <TargetPath>TemplateExecute</TargetPath>
+    </Content>
+    <Content Include="bin\Debug\TemplateExecute\Microsoft.VisualStudio.TextTemplating.Interfaces.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>bin\Debug\TemplateExecute</VSIXSubPath>
+      <TargetPath>TemplateExecute</TargetPath>
+    </Content>
+    <Content Include="bin\Debug\TemplateExecute\Microsoft.VisualStudio.Utilities.Internal.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>bin\Debug\TemplateExecute</VSIXSubPath>
+      <TargetPath>TemplateExecute</TargetPath>
+    </Content>
+    <Content Include="bin\Debug\TemplateExecute\Newtonsoft.Json.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>bin\Debug\TemplateExecute</VSIXSubPath>
+      <TargetPath>TemplateExecute</TargetPath>
+    </Content>
+    <Content Include="bin\Debug\TemplateExecute\System.Buffers.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>bin\Debug\TemplateExecute</VSIXSubPath>
+      <TargetPath>TemplateExecute</TargetPath>
+    </Content>
+    <Content Include="bin\Debug\TemplateExecute\System.Collections.Immutable.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>bin\Debug\TemplateExecute</VSIXSubPath>
+      <TargetPath>TemplateExecute</TargetPath>
+    </Content>
+    <Content Include="bin\Debug\TemplateExecute\System.Memory.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>bin\Debug\TemplateExecute</VSIXSubPath>
+      <TargetPath>TemplateExecute</TargetPath>
+    </Content>
+    <Content Include="bin\Debug\TemplateExecute\System.Numerics.Vectors.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>bin\Debug\TemplateExecute</VSIXSubPath>
+      <TargetPath>TemplateExecute</TargetPath>
+    </Content>
+    <Content Include="bin\Debug\TemplateExecute\System.Runtime.CompilerServices.Unsafe.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>bin\Debug\TemplateExecute</VSIXSubPath>
+      <TargetPath>TemplateExecute</TargetPath>
+    </Content>
+    <Content Include="bin\Debug\TemplateExecute\TemplateExecute.exe">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>bin\Debug\TemplateExecute</VSIXSubPath>
+      <TargetPath>TemplateExecute</TargetPath>
+    </Content>
+    <Content Include="bin\Debug\TemplateExecute\TemplateExecute.pdb">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>bin\Debug\TemplateExecute</VSIXSubPath>
+      <TargetPath>TemplateExecute</TargetPath>
+    </Content>
     <Content Include="LICENSE">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="bin\Debug\TemplateExecute\TemplateExecute.exe.config">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>bin\Debug\TemplateExecute</VSIXSubPath>
+      <TargetPath>TemplateExecute</TargetPath>
     </Content>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
@@ -85,7 +165,14 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TemplateExecute\**">
+    <Content Include="Media\HydraT4Preview.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Media\HydraT4x16.png" />
+    <Content Include="Media\HydraT4x32.ico" />
+    <Content Include="Media\HydraT4x32.png" />
+    <Content Include="ExecuteTemplate\**">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
   </ItemGroup>
@@ -98,6 +185,19 @@
       <Name>TextTemplatingCoreLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
+  <Target Name="HydraAfterBuild" AfterTargets="AfterBuild">
+    <ItemGroup>
+      <BinFiles Include="$(TargetDir)\**\*.*" />
+    </ItemGroup>
+    <PropertyGroup>
+      <PackageDestination>C:\Users\kenln\AppData\Local\Microsoft\VisualStudio\17.0_ab6c4981\Extensions\r0g2wq5u.jaa\</PackageDestination>
+    </PropertyGroup>
+    <Message Importance="high" Text="Copying the following files:" />
+    <Message Importance="high" Text="BinFiles: @(BinFiles)" />
+    <Message Importance="high" Text="Copying to: $(PackageDestination)" />
+    <Copy SourceFiles="@(BinFiles)" DestinationFolder="$(PackageDestination)\%(RecursiveDir)" />
+  </Target>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

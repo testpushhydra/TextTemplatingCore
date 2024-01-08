@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("TextTemplatingFileGeneratorCore")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("RdJNL")]
+[assembly: AssemblyCompany("CloudIDEaaS")]
 [assembly: AssemblyProduct("TextTemplatingFileGeneratorCore")]
-[assembly: AssemblyCopyright("Copyright 2022 RdJNL")]
+[assembly: AssemblyCopyright("Copyright 2022 CloudIDEaaS")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

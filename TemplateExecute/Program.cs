@@ -1,6 +1,6 @@
 ﻿//---------------------------------------------//
-// Copyright 2022 RdJNL                        //
-// https://github.com/RdJNL/TextTemplatingCore //
+// Copyright 2022 CloudIDEaaS                        //
+// https://github.com/CloudIDEaaS/TextTemplatingCore //
 //---------------------------------------------//
 using System;
 using System.Collections.Generic;
@@ -11,20 +11,22 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
-using RdJNL.TextTemplatingCore.TextTemplatingCoreLib;
+using CloudIDEaaS.TextTemplatingCore.TextTemplatingCoreLib;
+using System.Diagnostics;
+using System.Reflection.Metadata;
 
-namespace RdJNL.TemplateExecute
+namespace CloudIDEaaS.TemplateExecute
 {
     internal static class Program
     {
-        private const string TEMPLATE_NAMESPACE = "RdJNL.TextTemplatingCore.GeneratedTemplate";
+        private const string TEMPLATE_NAMESPACE = "CloudIDEaaS.TextTemplatingCore.GeneratedTemplate";
         private const string TEMPLATE_CLASS = "Template";
 
         private static int Main(string[] args)
         {
             try
             {
-                if( args.Length < 3 )
+                if (args.Length < 3)
                 {
                     throw new ArgumentException($"Need at least 3 arguments, found only {args.Length}.", nameof(args));
                 }
@@ -33,12 +35,13 @@ namespace RdJNL.TemplateExecute
                 string inputFile = UnescapeArg(args[1]);
                 string outputFile = UnescapeArg(args[2]);
                 string[] libraries = args.Length > 3 ? UnescapeArgs(args[3..]) : new string[0];
+                var directory = new DirectoryInfo(Path.GetDirectoryName(templateFile));
 
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(templateFile));
+                Directory.SetCurrentDirectory(directory.FullName);
 
                 string inputCode = File.ReadAllText(inputFile, Encoding.UTF8);
                 SourceText sourceText = SourceText.From(inputCode);
-                CSharpParseOptions options = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp8);
+                CSharpParseOptions options = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp12);
                 SyntaxTree syntaxTree = SyntaxFactory.ParseSyntaxTree(sourceText, options);
 
                 string partialCode = $"namespace {TEMPLATE_NAMESPACE} {{ public partial class {TEMPLATE_CLASS} {{ " +
@@ -56,64 +59,109 @@ namespace RdJNL.TemplateExecute
 
                 List<MetadataReference> references = new List<MetadataReference>();
 
-                foreach( Assembly a in AppDomain.CurrentDomain.GetAssemblies() )
+                foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
                 {
                     references.Add(MetadataReference.CreateFromFile(a.Location));
                 }
 
                 LibraryLoadContext context = new LibraryLoadContext();
 
-                foreach( string library in libraries )
+                foreach (string library in libraries)
                 {
                     Assembly assembly = context.LoadLibrary(library);
                     references.Add(MetadataReference.CreateFromFile(assembly.Location));
                 }
 
-                CSharpCompilation compilation = CSharpCompilation.Create("GeneratedTemplate.dll", new[] { syntaxTree, partialTree }, references,
-                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+                var textTemplatingInterfacesPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), @"Binaries\Microsoft.VisualStudio.TextTemplating.12.0\Microsoft.VisualStudio.TextTemplating.Interfaces.10.0.dll");
 
-                using( var stream = new MemoryStream() )
+                references.Add(MetadataReference.CreateFromFile(textTemplatingInterfacesPath));
+
+                var templateSourceReferenceResolver = new TemplateSourceReferenceResolver(references, syntaxTree);
+                var templateMetadataReferenceResolver = new TemplateMetadataReferenceResolver(references, syntaxTree);
+
+                CSharpCompilation compilation = CSharpCompilation.Create("GeneratedTemplate.dll", new[] { syntaxTree, partialTree }, references, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, sourceReferenceResolver: templateSourceReferenceResolver, metadataReferenceResolver: templateMetadataReferenceResolver));
+
+                using (var stream = new MemoryStream())
                 {
                     var result = compilation.Emit(stream);
+                    var debugResult = false;
+
                     IEnumerable<TemplateError> compileErrors = ProcessErrors(result.Diagnostics);
 
-                    if( !result.Success )
+                    if (!result.Success)
                     {
                         throw new TemplateException(compileErrors);
+                    }
+
+                    if (debugResult)
+                    {
+                        var fileInfo = new FileInfo(Path.Combine(directory.FullName, @"Generated_Code\GeneratedTemplate.dll"));
+
+                        if (!fileInfo.Directory.Exists)
+                        {
+                            fileInfo.Directory.Create();
+                        }
+                        else if (fileInfo.Exists)
+                        {
+                            fileInfo.Delete();
+                        }
+
+                        BinaryReader reader = null;
+
+                        stream.Seek(0, SeekOrigin.Begin);
+
+                        using (var fileStream = fileInfo.OpenWrite())
+                        using (var writer = new BinaryWriter(fileStream))
+                        {
+                            var buffer = new byte[stream.Length];
+                            string code;
+
+                            reader = new BinaryReader(stream);
+
+                            reader.Read(buffer, 0, buffer.Length);
+                            writer.Write(buffer, 0, buffer.Length);
+
+                            writer.Flush();
+                        }
                     }
 
                     stream.Seek(0, SeekOrigin.Begin);
 
                     Assembly assembly = context.LoadFromStream(stream);
+                    var solutionFileName = Environment.ExpandEnvironmentVariables("%SolutionFileName%");
 
-                    Type? templateType = assembly.GetType($"{TEMPLATE_NAMESPACE}.{TEMPLATE_CLASS}");
-
-                    if( templateType == null )
+                    using (var host = new TextTemplatingEngineHost(templateFile, solutionFileName))
                     {
-                        throw new Exception("Failed to find template class.");
+                        Type? templateType = assembly.GetType($"{TEMPLATE_NAMESPACE}.{TEMPLATE_CLASS}");
+
+                        if (templateType == null)
+                        {
+                            throw new Exception("Failed to find template class.");
+                        }
+
+                        dynamic? template = Activator.CreateInstance(templateType);
+
+                        if (template == null)
+                        {
+                            throw new Exception("Failed to create instance of template class.");
+                        }
+
+                        template.Host = host;
+                        string output = template.TransformText();
+
+                        File.WriteAllText(outputFile, output, Encoding.UTF8);
+
+                        WriteTemplateErrors(compileErrors);
+                        return 0;
                     }
-
-                    dynamic? template = Activator.CreateInstance(templateType);
-
-                    if( template == null )
-                    {
-                        throw new Exception("Failed to create instance of template class.");
-                    }
-
-                    string output = template.TransformText();
-
-                    File.WriteAllText(outputFile, output, Encoding.UTF8);
-
-                    WriteTemplateErrors(compileErrors);
-                    return 0;
                 }
             }
-            catch( TemplateException ex )
+            catch (TemplateException ex)
             {
                 WriteTemplateErrors(ex.Errors);
                 return 1;
             }
-            catch( Exception ex )
+            catch (Exception ex)
             {
                 Console.Error.Write(ex.ToString());
                 return 2;
@@ -143,13 +191,16 @@ namespace RdJNL.TemplateExecute
 
         private static void WriteTemplateErrors(IEnumerable<TemplateError> errors)
         {
-            foreach( TemplateError error in errors )
+            foreach (TemplateError error in errors)
             {
-                Console.Error.WriteLine(error.Warning ? 1 : 0);
-                Console.Error.WriteLine(error.Line);
-                Console.Error.WriteLine(error.Column);
-                Console.Error.WriteLine(error.Message.Length);
-                Console.Error.WriteLine(error.Message);
+                if (!error.Warning)
+                {
+                    Console.Error.WriteLine(error.Warning ? 1 : 0);
+                    Console.Error.WriteLine(error.Line);
+                    Console.Error.WriteLine(error.Column);
+                    Console.Error.WriteLine(error.Message.Length);
+                    Console.Error.WriteLine(error.Message);
+                }
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿//---------------------------------------------//
-// Copyright 2022 RdJNL                        //
-// https://github.com/RdJNL/TextTemplatingCore //
+// Copyright 2022 CloudIDEaaS                        //
+// https://github.com/CloudIDEaaS/TextTemplatingCore //
 //---------------------------------------------//
 using System;
 using System.CodeDom.Compiler;
@@ -10,14 +10,15 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TextTemplating;
-using RdJNL.TextTemplatingCore.TextTemplatingCoreLib;
+using CloudIDEaaS.TextTemplatingCore.TextTemplatingCoreLib;
+using System.Windows.Forms;
 
-namespace RdJNL.TextTemplatingCore.TextTransformCore
+namespace CloudIDEaaS.TextTemplatingCore.TextTransformCore
 {
     internal static class Program
     {
         private const string ERROR_OUTPUT = "ErrorGeneratingOutput";
-        private const string TEMPLATE_NAMESPACE = "RdJNL.TextTemplatingCore.GeneratedTemplate";
+        private const string TEMPLATE_NAMESPACE = "CloudIDEaaS.TextTemplatingCore.GeneratedTemplate";
         private const string TEMPLATE_CLASS = "Template";
 
         private static int Main(string[] args)
@@ -54,13 +55,12 @@ namespace RdJNL.TextTemplatingCore.TextTransformCore
 
                 if( outputFileName == inputFileName )
                 {
-                    throw new ExtensionException(
-                        "Cannot overwrite input file. This error probably means the output extension is equal to the template file's extension.");
+                    throw new ExtensionException("Cannot overwrite input file. This error probably means the output extension is equal to the template file's extension.");
                 }
 
                 references = TextTemplatingHelper.ProcessReferences(references, inputFileName).ToArray();
 
-                string output = TextTemplatingHelper.ExecuteTemplate(inputFileName, templateCode, references, out TemplateError[] errors);
+                string output = TextTemplatingHelper.TemplateExecute(inputFileName, templateCode, references, () => { }, out TemplateError[] errors);
                 ThrowOrWriteErrors(output == null, errors);
 
                 File.WriteAllText(outputFileName, output, encoding);

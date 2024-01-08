@@ -1,6 +1,6 @@
 ﻿//---------------------------------------------//
-// Copyright 2022 RdJNL                        //
-// https://github.com/RdJNL/TextTemplatingCore //
+// Copyright 2022 CloudIDEaaS                        //
+// https://github.com/CloudIDEaaS/TextTemplatingCore //
 //---------------------------------------------//
 using System;
 using System.Collections;
@@ -12,7 +12,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace RdJNL.TextTemplatingCore.TextTemplatingCoreLib
+namespace CloudIDEaaS.TextTemplatingCore.TextTemplatingCoreLib
 {
     public static class TextTemplatingHelper
     {
@@ -26,7 +26,7 @@ namespace RdJNL.TextTemplatingCore.TextTemplatingCoreLib
             return references
                 .Select(r =>
                 {
-                    foreach( var v in variables )
+                    foreach (var v in variables)
                     {
                         r = Regex.Replace(r, Regex.Escape($"$({v.Key})"), v.Value.Replace("$", "$$"), RegexOptions.IgnoreCase);
                     }
@@ -35,7 +35,7 @@ namespace RdJNL.TextTemplatingCore.TextTemplatingCoreLib
                 })
                 .Select(r =>
                 {
-                    if( r.EndsWith(".dll") )
+                    if (r.EndsWith(".dll"))
                     {
                         r = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(inputFileName), r));
                     }
@@ -48,15 +48,15 @@ namespace RdJNL.TextTemplatingCore.TextTemplatingCoreLib
         private static void AddEnvironmentVariables(IDictionary<string, string> variables)
         {
             // Handle variables like $(UserProfile) for pulling NuGet packages from the local storage folder
-            foreach( DictionaryEntry ev in Environment.GetEnvironmentVariables() )
+            foreach (DictionaryEntry ev in Environment.GetEnvironmentVariables())
             {
-                if( !(ev.Key is string key) || variables.ContainsKey(key) )
+                if (!(ev.Key is string key) || variables.ContainsKey(key))
                 {
                     continue;
                 }
 
                 string value;
-                switch( ev.Value )
+                switch (ev.Value)
                 {
                     case null:
                         value = "";
@@ -73,7 +73,7 @@ namespace RdJNL.TextTemplatingCore.TextTemplatingCoreLib
             }
         }
 
-        public static string ExecuteTemplate(string inputFileName, string templateCode, string[] references, out TemplateError[] errors)
+        public static string TemplateExecute(string inputFileName, string templateCode, string[] references, Action callback, out TemplateError[] errors)
         {
             string coreInputFile = null;
             string coreOutputFile = null;
@@ -84,9 +84,9 @@ namespace RdJNL.TextTemplatingCore.TextTemplatingCoreLib
                 File.WriteAllText(coreInputFile, templateCode, Encoding.UTF8);
                 coreOutputFile = Path.GetTempFileName();
 
-                bool executeSuccess = RunExecute(inputFileName, coreInputFile, coreOutputFile, references, out errors);
+                bool executeSuccess = RunExecute(inputFileName, coreInputFile, coreOutputFile, references, callback, out errors);
 
-                if( !executeSuccess )
+                if (!executeSuccess)
                 {
                     return null;
                 }
@@ -99,28 +99,31 @@ namespace RdJNL.TextTemplatingCore.TextTemplatingCoreLib
             {
                 try
                 {
-                    if( coreInputFile != null && File.Exists(coreInputFile) )
+                    if (coreInputFile != null && File.Exists(coreInputFile))
                     {
                         File.Delete(coreInputFile);
                     }
                 }
-                catch { }
+                catch
+                {
+                }
 
                 try
                 {
-                    if( coreOutputFile != null && File.Exists(coreOutputFile) )
+                    if (coreOutputFile != null && File.Exists(coreOutputFile))
                     {
                         File.Delete(coreOutputFile);
                     }
                 }
-                catch { }
+                catch
+                {
+                }
             }
         }
 
-        private static bool RunExecute(string inputFileName, string coreInputFile, string coreOutputFile, string[] references, out TemplateError[] errors)
+        private static bool RunExecute(string inputFileName, string coreInputFile, string coreOutputFile, string[] references, Action processEndCallback, out TemplateError[] errors)
         {
-            string executePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                @"TemplateExecute\TemplateExecute.exe"));
+            string executePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"TemplateExecute\TemplateExecute.exe"));
 
             ProcessStartInfo info = new ProcessStartInfo
             {
@@ -129,31 +132,107 @@ namespace RdJNL.TextTemplatingCore.TextTemplatingCoreLib
                 CreateNoWindow = true,
                 UseShellExecute = false,
                 RedirectStandardError = true,
+                RedirectStandardOutput = true,
                 WindowStyle = ProcessWindowStyle.Hidden,
             };
 
-            var p = Process.Start(info);
-            p.WaitForExit(60000);
+            var process = Process.Start(info);
+            string output = string.Empty;
 
-            if( !p.HasExited )
+            process.EnableRaisingEvents = true;
+
+            process.OutputDataReceived += (s, e) =>
             {
-                p.Kill();
-                throw new TimeoutException("The TemplateExecute process did not respond within 60 seconds. Aborting operation.");
+                if (e.Data != null && e.Data.Length > 0)
+                {
+                    output += e.Data;
+                }
+            };
+
+            process.Exited += (s, e) =>
+            {
+                var regex = new Regex(@"^TempVsProcessId: (?<tempVsProcessId>\d*?)$");
+
+                if (output != null)
+                {
+                    if (regex.IsMatch(output))
+                    {
+                        var match = regex.Match(output);
+
+                        var processIdText = match.Groups["tempVsProcessId"].Value;
+
+                        if (processIdText != null)
+                        {
+                            var processId = (int) uint.Parse(processIdText);
+                            Process vsProcess;
+
+                            try
+                            {
+                                vsProcess = Process.GetProcessById(processId);
+
+                                if (vsProcess != null)
+                                {
+                                    vsProcess.Kill();
+                                }
+                            }
+                            catch
+                            {
+                            }
+                        }
+                    }
+                }
+            };
+
+            process.BeginOutputReadLine();
+
+            if (Debugger.IsAttached)
+            {
+                process.WaitForExit();
+            }
+            else
+            {
+                process.WaitForExit(90);
             }
 
-            if( p.ExitCode == 0 )
+            if (!process.HasExited)
             {
-                errors = ProcessTemplateErrors(p).ToArray();
+                string error = process.StandardError.ReadToEnd();
+
+                try
+                {
+                    if (error.Length > 0)
+                    {
+                        process.Kill();
+                        throw new TimeoutException($"The TemplateExecute process did not respond within 90 seconds. Aborting operation. Error: { error }");
+                    }
+                    else
+                    {
+                        processEndCallback();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new TimeoutException($"The TemplateExecute process did not respond within 90 seconds. Aborting operation. Error: { ex }");
+                }
+            }
+            else
+            {
+                processEndCallback();
+            }
+
+            if (process.ExitCode == 0)
+            {
+                errors = ProcessTemplateErrors(process).ToArray();
                 return true;
             }
-            else if( p.ExitCode == 1 )
+            else if (process.ExitCode == 1)
             {
-                errors = ProcessTemplateErrors(p).ToArray();
+                errors = ProcessTemplateErrors(process).ToArray();
                 return false;
             }
             else
             {
-                string error = p.StandardError.ReadToEnd();
+                string error = process.StandardError.ReadToEnd();
                 errors = new[] { new TemplateError(false, $"Something went wrong executing the template in .NET Core: {error}") };
                 return false;
             }
@@ -163,7 +242,7 @@ namespace RdJNL.TextTemplatingCore.TextTemplatingCoreLib
         {
             var stdError = process.StandardError;
 
-            while( !stdError.EndOfStream )
+            while (!stdError.EndOfStream)
             {
                 bool warning = stdError.ReadLine() == "1";
                 int line = int.Parse(stdError.ReadLine());
@@ -182,9 +261,9 @@ namespace RdJNL.TextTemplatingCore.TextTemplatingCoreLib
         {
             StringBuilder arguments = new StringBuilder();
 
-            foreach( string arg in args )
+            foreach (string arg in args)
             {
-                if( arguments.Length > 0 )
+                if (arguments.Length > 0)
                 {
                     arguments.Append(" ");
                 }

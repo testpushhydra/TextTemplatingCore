@@ -2,12 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>RdJNL.TextTemplatingCore.TextTemplatingCoreLib</RootNamespace>
+    <RootNamespace>CloudIDEaaS.TextTemplatingCore.TextTemplatingCoreLib</RootNamespace>
     
-    <Authors>RdJNL</Authors>
-    <Company>RdJNL</Company>
+    <Authors>CloudIDEaaS</Authors>
+    <Company>CloudIDEaaS</Company>
     <Product>TextTemplatingCoreLib</Product>
-    <Copyright>Copyright 2022 RdJNL</Copyright>
+    <Copyright>Copyright 2022 CloudIDEaaS</Copyright>
+	<UseWindowsForms>true</UseWindowsForms>
+
   </PropertyGroup>
 
   <ItemGroup>

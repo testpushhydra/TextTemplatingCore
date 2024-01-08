@@ -1,13 +1,13 @@
 ﻿//---------------------------------------------//
-// Copyright 2022 RdJNL                        //
-// https://github.com/RdJNL/TextTemplatingCore //
+// Copyright 2022 CloudIDEaaS                        //
+// https://github.com/CloudIDEaaS/TextTemplatingCore //
 //---------------------------------------------//
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace RdJNL.TextTemplatingCore.TextTemplatingCoreLib
+namespace CloudIDEaaS.TextTemplatingCore.TextTemplatingCoreLib
 {
     public sealed class TemplateException : Exception
     {

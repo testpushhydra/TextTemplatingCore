@@ -1,10 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="RdJNL.TextTemplatingCore.Generator.85b769de-38f5-4cbe-91ae-d0dfa431fe30" Version="1.2.1" Language="en-US" Publisher="RdJNL" />
-        <DisplayName>Text Templating File Generator .NET 7</DisplayName>
-        <Description xml:space="preserve">Generate files from T4 templates using the .NET 7 runtime.</Description>
+        <Identity Id="CloudIDEaaS.TextTemplatingCore.Generator.85b769de-38f5-4cbe-91ae-d0dfa431fe30" Version="1.0.4" Language="en-US" Publisher="CloudIDEaaS" />
+        <DisplayName>CloudIDEaaS - T4 Generator .NET 8</DisplayName>
+        <Description xml:space="preserve">Generate files from T4 templates using the .NET 8 runtime.</Description>
         <License>LICENSE</License>
+        <Icon>Media\HydraT4x32.ico</Icon>
+        <PreviewImage>Media\HydraT4Preview.png</PreviewImage>
     </Metadata>
     <Installation>
         <InstallationTarget Version="[16.0,18.0)" Id="Microsoft.VisualStudio.Community">

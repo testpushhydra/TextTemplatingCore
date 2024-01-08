@@ -1,31 +1,86 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <RootNamespace>RdJNL.TemplateExecute</RootNamespace>
-    
-    <Authors>RdJNL</Authors>
-    <Company>RdJNL</Company>
-    <Product>TemplateExecute</Product>
-    <Copyright>Copyright 2022 RdJNL</Copyright>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<RootNamespace>CloudIDEaaS.TemplateExecute</RootNamespace>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+		<EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.5.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="7.0.0" />
-    <PackageReference Include="System.CodeDom" Version="7.0.0" />
-  </ItemGroup>
+		<Authors>CloudIDEaaS</Authors>
+		<Company>CloudIDEaaS</Company>
+		<Product>TemplateExecute</Product>
+		<Copyright>Copyright 2022 CloudIDEaaS</Copyright>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\TextTemplatingCoreLib\TextTemplatingCoreLib.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+	  <Compile Include="LibraryLoadContext.cs" />
+	  <Compile Include="Program.cs" />
+	  <Compile Include="TemplateMetadataReferenceResolver.cs" />
+	  <Compile Include="TemplateSourceReferenceResolver.cs" />
+	  <Compile Include="TextTemplatingEngineHost.cs" />
+	  <Compile Include="Utils\AssemblyExtensions.cs" />
+	  <Compile Include="Utils\AssemblyNameParts.cs" />
+	  <Compile Include="Utils\DTEExtensions.cs" />
+	  <Compile Include="Utils\StringExtensions.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="envdte" Version="17.8.37221" />
+		<PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.0" />
+		<PackageReference Include="System.CodeDom" Version="8.0.0" />
+	</ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\roslyn\src\Compilers\Core\Portable\Microsoft.CodeAnalysis.csproj" />
+		<ProjectReference Include="..\roslyn\src\Compilers\CSharp\Portable\Microsoft.CodeAnalysis.CSharp.csproj" />
+		<ProjectReference Include="..\TextTemplatingCoreLib\TextTemplatingCoreLib.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<FrameworkReference Include="Microsoft.WindowsDesktop.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Binaries\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0">
+	    <HintPath>Binaries\Microsoft.VisualStudio.TextTemplating.12.0\Microsoft.VisualStudio.TextTemplating.Interfaces.10.0.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Binaries\Microsoft.VisualStudio.TextTemplating.12.0\Microsoft.VisualStudio.TextTemplating.12.0.dll">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Binaries\Microsoft.VisualStudio.TextTemplating.12.0\Microsoft.VisualStudio.TextTemplating.Interfaces.10.0.dll">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Binaries\Microsoft.VisualStudio.TextTemplating.12.0\Microsoft.VisualStudio.TextTemplating.Interfaces.12.0.dll">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+	<Target Name="HydraAfterBuild" AfterTargets="AfterBuild">
+		<ItemGroup>
+			<BinFiles Include="$(TargetDir)\**\*.*" />
+		</ItemGroup>
+		<PropertyGroup>
+			<Destination>$(SolutionDir)TextTemplatingFileGeneratorCore\bin\$(Configuration)\TemplateExecute\</Destination>
+			<PackageDestination>C:\Users\kenln\AppData\Local\Microsoft\VisualStudio\17.0_ab6c4981\Extensions\r0g2wq5u.jaa\TemplateExecute</PackageDestination>
+		</PropertyGroup>
+		<Message Importance="high" Text="Copying the following files:" />
+		<Message Importance="high" Text="BinFiles: @(BinFiles)" />
+		<Message Importance="high" Text="Copying to Destination: $(Destination)" />
+		<Copy SourceFiles="@(BinFiles)" DestinationFolder="$(Destination)\%(RecursiveDir)" />
+		<Message Importance="high" Text="Copying to PackageDestination: $(PackageDestination)" />
+		<Copy SourceFiles="@(BinFiles)" DestinationFolder="$(PackageDestination)\%(RecursiveDir)" />
+	</Target>
 </Project>
